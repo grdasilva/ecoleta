@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img alt="NextLevelWeek" src="./web/public/banner-ecoleta" />
+    <img alt="NextLevelWeek" src="./web/public/banner-ecoleta.png" />
 </h1>
 
 
