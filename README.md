@@ -57,7 +57,7 @@ Além disto é bom ter um editor para trabalhar com o código como [VSCode][vsco
 
 ```bash
 # Clone este repositório
-$ git clone https://github.com/leon-carvalho/Ecoleta
+$ git clone https://github.com/grdasilva/Ecoleta
 
 # Acesse a pasta do projeto no terminal/cmd
 $ cd Ecoleta
@@ -78,7 +78,7 @@ $ npm run dev:server
 
 ```bash
 # Clone este repositório
-$ git clone https://github.com/leon-carvalho/Ecoleta
+$ git clone https://github.com/grdasilva/Ecoleta
 
 # Acesse a pasta do projeto no seu terminal/cmd
 $ cd Ecoleta
@@ -95,9 +95,28 @@ $ npm run start
 # A aplicação será aberta na porta:3000 - acesse http://localhost:3000
 ```
 
-### 📱Rodando a aplicação mobile 
+### 📱Rodando a aplicação mobile (Front End) 
 
-🚧 Em construção... 🚧
+```bash
+# Clone este repositório
+$ git clone https://github.com/grdasilva/Ecoleta
+
+# Acesse a pasta do projeto no seu terminal/cmd
+$ cd Ecoleta
+
+# Vá para a pasta da aplicação Front End
+$ cd mobile
+
+# Instale as dependências
+$ npm install
+
+# Execute a aplicação em modo de desenvolvimento
+$ npm run start
+
+# A aplicação será aberta na porta:19002 - acesse http://localhost:19002 e instale o app Expo na PlayStore ou  AppleStore e leia o QRCode
+$ https://play.google.com/store/apps/details?id=host.exp.exponent&hl=pt_BR
+$ https://apps.apple.com/br/app/expo-client/id982107779
+```
 
 ## 😯 Como contribuir para o projeto
 
@@ -112,7 +131,7 @@ $ npm run start
 
 Este projeto esta sobe a licença MIT. Veja a [LICENÇA](license) para saber mais.
 
-Feito com ❤️ por Guilherme Rodrigues 👋🏽 [Entre em contato!](https://www.linkedin.com/in/guilherme-silva-3a4419151/)
+Feito com ❤️ por Guilherme Rodrigues da Silva 👋🏽 [Entre em contato!](https://www.linkedin.com/in/guilherme-silva-3a4419151/)
 
 [nodejs]: https://nodejs.org/
 [typescript]: https://www.typescriptlang.org/
