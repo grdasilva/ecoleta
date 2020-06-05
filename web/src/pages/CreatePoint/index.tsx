@@ -7,6 +7,7 @@ import { LeafletMouseEvent } from 'leaflet';
 import './styles.css';
 
 import logo from '../../assets/logo.svg';
+import Dropzone from './../../components/Dropzone';
 
 import api from '../../services/api';
 import axios from 'axios';
@@ -29,7 +30,7 @@ const CreatePoint = () => {
     const [items, setItems] = useState<Item[]>([]);
     const [ufs, setUfs] = useState<string[]>([]);
     const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
-    
+
     const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0]);
     const [formData, setFormData] = useState({
         name: '',
@@ -41,6 +42,7 @@ const CreatePoint = () => {
     const [selectedCity, setSelectedCity] = useState('0');
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const [cities, setCities] = useState<string[]>([]);
+    const [selectedFile, setSelectedFile] = useState<File>();
 
     const history = useHistory();
 
@@ -52,17 +54,17 @@ const CreatePoint = () => {
 
     useEffect(() => {
         axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(response => {
-            const ufInitials = response.data.map(uf => uf.sigla); 
+            const ufInitials = response.data.map(uf => uf.sigla);
             setUfs(ufInitials);
         });
     }, []);
 
     useEffect(() => {
-        if(selectedUf === '0') {
+        if (selectedUf === '0') {
             return;
         }
         axios.get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`).then(response => {
-            const cityNames = response.data.map(uf => uf.nome); 
+            const cityNames = response.data.map(uf => uf.nome);
             setCities(cityNames);
         });
     }, [selectedUf]);
@@ -71,7 +73,7 @@ const CreatePoint = () => {
         navigator.geolocation.getCurrentPosition(position => {
             const { latitude, longitude } = position.coords;
 
-            setInitialPosition([ latitude, longitude ]);
+            setInitialPosition([latitude, longitude]);
         })
     }, []);
 
@@ -104,7 +106,7 @@ const CreatePoint = () => {
             const filteredItems = selectedItems.filter(item => item !== id);
             setSelectedItems(filteredItems);
         } else {
-            setSelectedItems([ ...selectedItems, id ]);
+            setSelectedItems([...selectedItems, id]);
         }
     }
 
@@ -114,20 +116,24 @@ const CreatePoint = () => {
         const { name, email, whatsapp } = formData;
         const uf = selectedUf;
         const city = selectedCity;
-        const [ latitude, longitude ] = selectedPosition;
+        const [latitude, longitude] = selectedPosition;
         const items = selectedItems;
 
-        const data = {
-            name,
-            email,
-            whatsapp,
-            uf,
-            city,
-            latitude,
-            longitude,
-            items
-        };
-        
+        const data = new FormData();
+
+        data.append('name', name);
+        data.append('email', email);
+        data.append('whatsapp', whatsapp);
+        data.append('uf', uf);
+        data.append('city', city);
+        data.append('latitude', String(latitude));
+        data.append('longitude', String(longitude));
+        data.append('items', items.join(','));
+
+        if (selectedFile) {
+            data.append('image', selectedFile);
+        }
+
         await api.post('points', data);
         alert('Ponto cadastrado');
         history.push('/');
@@ -145,6 +151,9 @@ const CreatePoint = () => {
 
             <form onSubmit={handleSubmit}>
                 <h1>Cadastro do ponto de coleta</h1>
+
+                <Dropzone onFileUploaded={setSelectedFile} />
+
                 <fieldset>
                     <legend>
                         <h2>Dados</h2>
@@ -183,18 +192,18 @@ const CreatePoint = () => {
                             <label htmlFor="uf">Estado(UF)</label>
                             <select onChange={handleSelectUf} value={selectedUf} name="uf" id="uf">
                                 <option value="0">Selecione uma UF</option>
-                                { ufs.map(uf => (
+                                {ufs.map(uf => (
                                     <option key={uf} value={uf}>{uf}</option>
-                                )) }
+                                ))}
                             </select>
                         </div>
                         <div className="field">
                             <label htmlFor="city">Cidade</label>
                             <select onChange={handleSelectCity} value={selectedCity} name="city" id="city">
                                 <option value="0">Selecione uma Cidade</option>
-                                { cities.map(city => (
+                                {cities.map(city => (
                                     <option key={city} value={city}>{city}</option>
-                                )) }
+                                ))}
                             </select>
                         </div>
                     </div>
@@ -208,11 +217,11 @@ const CreatePoint = () => {
                     <ul className="items-grid">
                         {
                             items.map(item =>
-                                <li className={selectedItems.includes(item.id) ? 'selected' : ''} 
-                                    key={item.id} 
+                                <li className={selectedItems.includes(item.id) ? 'selected' : ''}
+                                    key={item.id}
                                     onClick={
                                         () => handleSelectItem(item.id)
-                                        }
+                                    }
                                 >
                                     <img src={item.image_url} alt={item.title} />
                                     <span>{item.title}</span>
